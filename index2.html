@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <!-- Some basic meta info -->
+        <title>Example</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">        <!-- A stylesheet to make things automatically look nice -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+	</head>
+	<body>
+	<!-- Script to handle socket.io-->
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			var socket = io.connect('http://' + document.domain + ':' + location.port),
+				text = document.getElementById("textfield_input").value;
+			socket.on('connect', function() {
+				socket.send('User has connected!');
+				console.log('\nThe session id is: '+ socket.id + '\n');
+			});
+			
+			socket.on('message', function(msg) {
+				document.getElementById("chat").innerHTML += msg + "\n\n";
+				console.log('Received message');
+			});
+
+			$('#send_button').on('click', function() {
+				socket.emit(document.getElementById("textfield_input").value);
+				//$('#textfield_input').val('');
+				document.getElementById("textfield_input").value = "";
+			});
+		});
+		</script>
+    <div style="margin: 25px; display: flex; flex-direction: column;">
+        <h1 class="title">Hello Saksham.</h1>
+        <p>Welcome to the flask quick start example.</p>                        
+        <textarea id="chat" style="width: 500px; height: 250px; font-size: 18px; font-family: monospace; margin-top: 10px;"></textarea>                 
+        <div style="display: flex; flex-direction: row;">
+            <input type="text" id="textfield_input" style="height: 30px; width: 400px; margin-top: 5px; margin-right: 10px;" class="textfield"> 
+            <button id="send_button" class="button is-primary" style="margin-top: 5px; width: 90px; height: 30px;">Send</button>
+        </div>
+    </div>
+	<ul id="messages"></ul>
+	</body>
+</html>
